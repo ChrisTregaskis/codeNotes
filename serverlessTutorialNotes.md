@@ -65,6 +65,25 @@
 	Finally, deploy $ sls deploye. <br/>
 
 
-5. Adding serverless webpack to your project
+5. ## Adding serverless webpack to your project
 
-	
+	When adding lambdas and deploying, by default it adds everything from the serverless repo. We can use webpack, to only include the files needed within the lambda. <br/>
+    To add this, in the `serverless.yml` file, under `plugins` we add `serverless-webpack` <br/>
+    A bit further down the same file, we add `package` with `individually: true` <br/>
+
+    ```
+        plugins:
+          - serverless-s3-sync
+          - serverless-webpack
+
+        package:
+          individually: true
+    ```
+
+    Install plugin: `npm install --save serverless-webpack` <br/>
+    After this, install webpack itself: `npm install --save webpack`
+    Next we create a new config file, same level as lambdas folder: `webpack.config.js`. <br/>
+    Once this is done, run `sls deploy` <br/>
+
+6. ## Create a serverless database - DynamoDB database
+
