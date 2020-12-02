@@ -87,3 +87,32 @@
 
 6. ## Create a serverless database - DynamoDB database
 
+    Adding a table via the resources in our `serverless.yml` file. <br/>
+    ``` 
+        MyDynamoDbTable:
+          Type: AWS::DynamoDB::Table
+          Properties:
+            TableName: ${self:custom.tableName}
+            AttributeDefinitions:
+              - AttributeName: ID
+                AttributeType: S
+            KeySchema:
+              - AttributeName: ID
+                KeyType: HASH
+            BillingMode: PAY_PER_REQUEST
+    ```
+    A little further up the file, in `custom` we have created a variable we can reference elsewhere called `tableName`. Notice we used this in `Properties.TableName` above. <br/>
+
+    ```
+        custom:
+          tableName: player-points
+          s3Sync:
+              - bucketName: myserverlessprojectuploadbucket-310316
+              localDir: UploadData
+    ```
+
+    once finished, you can run `sls deploy` <br/>
+    You can make sure its worked by checking dynamoDB on AWS.
+
+7. ## Create an API to get data from your DynamoDB database
+
