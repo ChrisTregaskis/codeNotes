@@ -1,0 +1,70 @@
+# AWS Serverless Framework Tutorial notes
+
+1. ## Setting up the serverless framework with AWS
+
+	User: ServerlessAccount <br/>
+	Access Key: AKIAYTG7K4F7CNVUBGUO <br/>
+	Secrete Access Key: 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 <br/>
+
+	Ensure permissions to install node packages globally. Ref "Mac Os X Answer" [here](https://stackoverflow.com/questions/33725639/npm-install-g-less-does-not-work-eacces-permission-denied). <br/>
+	Install aws serverless: ` $ npm install -g serverless`.<br/>
+	Set credentials: `$ serverless config credentials --provider aws --key {enterKey} --secret {enterSecret} --profile serverlessUser`.
+
+
+2. ## Creating a new serverless project and deploying a lambda
+
+	Set up serverless folder  `$ serverless create --template aws-nodejs --path myServerlessProject`. <br/>
+	This should have generated a file called 'myServerlessProject' with handle.js and serverless.yml in. <br/>
+	In serverless.yml, make sure to add the user profile to the provider. <br/>
+	Then you can run `$ sls deploy` (sls is short for serverless) This creates a cloudformation template. <br/>
+	NOTE: make sure your region is set correctly in serverless.yml file. It defaults to us-east-1, and should be eu-west-2. <br/>
+
+
+3. ## How to deploy an s3 bucket and upload data
+
+	Set up the file in `serverless.yml`. <br/>
+    `BucketName` must be unique <br/>
+    ```
+		resources:
+		  Resources:
+		    DemoBucketUpload:
+		      Type: AWS::S3::Bucket
+		      Properties:
+		        BucketName: myserverlessprojectuploadbucket-310316
+    ```       
+	run `$ sls deploy` to upload data to s3 bucket we can use a plugin called `serverless-s3-sync` <br/>
+    ```
+		plugins:
+		  - serverless-s3-sync
+
+		custom:
+		  s3Sync:
+		    - bucketName: myserverlessprojectuploadbucket-310316
+		      localDir: UploadData
+    ```
+	run `$npm init` <br/>
+	and add to dependencies run `$ npm install --save serverless-s3-sync` <br/>
+
+
+4. ## Creating an API with serverless
+
+	Create lambdas folder. <br/>
+	Create a lambda, in this instance, getUser.js. <br/>
+	Your porogotive how to, but create output or responses module to be reused. In this instance, inside the lambda folder, we created apiResponses.js. <br/>
+	Once you've completed your API, you need to update `serverless.yml` to configure on upload. <br/>
+    ```
+		functions:
+		  getUser:
+		    handler: lambdas/getUser.handler
+		    events:
+		      - http:
+		          path: get-user/{ID}
+		          method: GET
+		          cors: true
+    ```
+	Finally, deploy $ sls deploye. <br/>
+
+
+5. Adding serverless webpack to your project
+
+	
