@@ -116,3 +116,47 @@
 
 7. ## Create an API to get data from your DynamoDB database
 
+    First thing to do is reorganise lambda file structure into `endpoints` and `common`. <br/>
+    We move the `apiResponses.js` module into common and `getUser.js` to endpoints. <br/>
+    Creating the `getPlayerScore` endpoint in endpoints file. We'll need a common `get()` method from dynamoDB. So next we create `Dynamo.js` in common. <br/>
+    Next we update our `serverless.yml` file.
+    
+    ```
+        environment:
+          tableName: ${self:custom.tableName}
+        iamRoleStatements:
+          - Effect: Allow
+          Action:
+          - dynamodb:*
+          - lambda:*
+          Resource: '*'
+
+        ...
+
+        custom:
+          tableName: player-points
+          s3Sync:
+              - bucketName: myserverlessprojectuploadbucket-310316
+              localDir: UploadData
+
+        functions:
+          getUser:
+            handler: lambdas/endpoints/getUser.handler
+            events:
+              - http:
+                  path: get-user/{ID}
+                  method: GET
+                  cors: true
+
+          getPlayerScore:
+            handler: lambdas/endpoints/getPlayerScore.handler
+            events:
+              - http:
+                  path: get-player-score/{ID}
+                  method: GET
+                  cors: true
+    ```
+
+8. ## Adding new data to dynamoDB 
+
+
